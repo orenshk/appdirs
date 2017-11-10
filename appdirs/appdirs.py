@@ -16,7 +16,6 @@ See <http://github.com/ActiveState/appdirs> for details and usage.
 __version__ = "1.4.4"
 __version_info__ = tuple(int(segment) for segment in __version__.split("."))
 
-
 import sys
 import os
 
@@ -25,24 +24,59 @@ PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str
 
-if sys.platform.startswith('java'):
-    import platform
-    os_name = platform.java_ver()[3][0]
-    if os_name.startswith('Windows'): # "Windows XP", "Windows 7", etc.
-        system = 'win32'
-    elif os_name.startswith('Mac'): # "Mac OS X", etc.
-        system = 'darwin'
-    else: # "Linux", "SunOS", "FreeBSD", etc.
-        # Setting this to "linux2" is not ideal, but only Windows or Mac
-        # are actually checked for and the rest of the module expects
-        # *sys.platform* style strings.
-        system = 'linux2'
+system = {"windows": False, 'macosx': False, 'linux': False}
+
+if sys.platform == 'win32':
+    system['windows'] = True
+elif sys.platform == 'darwin':
+    system['macosx'] = True
+    osx_base_path = os.path.expanduser('~/Library/Application Support')
 else:
-    system = sys.platform
+    # this is a broad generalization. We may be able to get away with sys.platform.statswith('linux') and error
+    # out on everything else. But this requires some testing.
+    system['linux'] = True
+
+
+def user_data_dir(app_name, app_author=None, version=None, roaming=False):
+    # TODO: docstring
+
+    if system['windows']:
+        if roaming:
+            windows_folder_id = "CSIDL_APPDATA" or "CSIDL_LOCAL_APPDATA"
+        else:
+            windows_folder_id = "CSIDL_LOCAL_APPDATA"
+
+        if app_author is None:
+            raise RuntimeError('app_author must be provided on Windows')
+
+        path = os.path.normpath(_get_win_folder(windows_folder_id))
+    elif system['macosx']:
+        path = os.path.join(osx_base_path, app_name)
+    elif system['linux']:
+        base_path = os.getenv('XDG_DATA_HOME', os.path.expanduser("~/.local/share"))
+        path = os.path.join(base_path, app_name)
+    else:
+        raise RuntimeError('Unsupported operating system: {}'.format(sys.platform))
+
+    if version is not None:
+        path = '{}_{}'.format(path, version)
+
+    return path
+
+
+def user_config_dir(app_name, app_author=None, version=None, roaming=False):
+    # TODO: docstring
+
+    if system['windows']:
+        pass
+    elif system['macosx']:
+        pass
+    else:
+        pass
 
 
 
-def user_data_dir(appname=None, appauthor=None, version=None, roaming=False):
+def user_data_dir_old(appname=None, appauthor=None, version=None, roaming=False):
     r"""Return full path to the user-specific data dir for this application.
 
         "appname" is the name of application.
@@ -406,8 +440,9 @@ def user_log_dir(appname=None, appauthor=None, version=None, opinion=True):
 
 class AppDirs(object):
     """Convenience wrapper for getting application dirs."""
+
     def __init__(self, appname=None, appauthor=None, version=None,
-            roaming=False, multipath=False):
+                 roaming=False, multipath=False):
         self.appname = appname
         self.appauthor = appauthor
         self.version = version
@@ -432,7 +467,7 @@ class AppDirs(object):
     @property
     def site_config_dir(self):
         return site_config_dir(self.appname, self.appauthor,
-                             version=self.version, multipath=self.multipath)
+                               version=self.version, multipath=self.multipath)
 
     @property
     def user_cache_dir(self):
@@ -450,60 +485,9 @@ class AppDirs(object):
                             version=self.version)
 
 
-#---- internal support stuff
+# ---- internal support stuff
 
-def _get_win_folder_from_registry(csidl_name):
-    """This is a fallback technique at best. I'm not sure if using the
-    registry for this guarantees us the correct answer for all CSIDL_*
-    names.
-    """
-    if PY3:
-      import winreg as _winreg
-    else:
-      import _winreg
-
-    shell_folder_name = {
-        "CSIDL_APPDATA": "AppData",
-        "CSIDL_COMMON_APPDATA": "Common AppData",
-        "CSIDL_LOCAL_APPDATA": "Local AppData",
-    }[csidl_name]
-
-    key = _winreg.OpenKey(
-        _winreg.HKEY_CURRENT_USER,
-        r"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"
-    )
-    dir, type = _winreg.QueryValueEx(key, shell_folder_name)
-    return dir
-
-
-def _get_win_folder_with_pywin32(csidl_name):
-    from win32com.shell import shellcon, shell
-    dir = shell.SHGetFolderPath(0, getattr(shellcon, csidl_name), 0, 0)
-    # Try to make this a unicode path because SHGetFolderPath does
-    # not return unicode strings when there is unicode data in the
-    # path.
-    try:
-        dir = unicode(dir)
-
-        # Downgrade to short path name if have highbit chars. See
-        # <http://bugs.activestate.com/show_bug.cgi?id=85099>.
-        has_high_char = False
-        for c in dir:
-            if ord(c) > 255:
-                has_high_char = True
-                break
-        if has_high_char:
-            try:
-                import win32api
-                dir = win32api.GetShortPathName(dir)
-            except ImportError:
-                pass
-    except UnicodeError:
-        pass
-    return dir
-
-
-def _get_win_folder_with_ctypes(csidl_name):
+def _get_win_folder(csidl_name):
     import ctypes
 
     csidl_const = {
@@ -529,53 +513,12 @@ def _get_win_folder_with_ctypes(csidl_name):
 
     return buf.value
 
-def _get_win_folder_with_jna(csidl_name):
-    import array
-    from com.sun import jna
-    from com.sun.jna.platform import win32
 
-    buf_size = win32.WinDef.MAX_PATH * 2
-    buf = array.zeros('c', buf_size)
-    shell = win32.Shell32.INSTANCE
-    shell.SHGetFolderPath(None, getattr(win32.ShlObj, csidl_name), None, win32.ShlObj.SHGFP_TYPE_CURRENT, buf)
-    dir = jna.Native.toString(buf.tostring()).rstrip("\0")
-
-    # Downgrade to short path name if have highbit chars. See
-    # <http://bugs.activestate.com/show_bug.cgi?id=85099>.
-    has_high_char = False
-    for c in dir:
-        if ord(c) > 255:
-            has_high_char = True
-            break
-    if has_high_char:
-        buf = array.zeros('c', buf_size)
-        kernel = win32.Kernel32.INSTANCE
-        if kernel.GetShortPathName(dir, buf, buf_size):
-            dir = jna.Native.toString(buf.tostring()).rstrip("\0")
-
-    return dir
-
-if system == "win32":
-    try:
-        import win32com.shell
-        _get_win_folder = _get_win_folder_with_pywin32
-    except ImportError:
-        try:
-            from ctypes import windll
-            _get_win_folder = _get_win_folder_with_ctypes
-        except ImportError:
-            try:
-                import com.sun.jna
-                _get_win_folder = _get_win_folder_with_jna
-            except ImportError:
-                _get_win_folder = _get_win_folder_from_registry
-
-
-#---- self test code
+# ---- self test code
 
 if __name__ == "__main__":
-    appname = "MyApp"
-    appauthor = "MyCompany"
+    test_appname = "MyApp"
+    test_appauthor = "MyCompany"
 
     props = ("user_data_dir",
              "user_config_dir",
@@ -588,21 +531,21 @@ if __name__ == "__main__":
     print("-- app dirs %s --" % __version__)
 
     print("-- app dirs (with optional 'version')")
-    dirs = AppDirs(appname, appauthor, version="1.0")
+    dirs = AppDirs(test_appname, test_appauthor, version="1.0")
     for prop in props:
         print("%s: %s" % (prop, getattr(dirs, prop)))
 
     print("\n-- app dirs (without optional 'version')")
-    dirs = AppDirs(appname, appauthor)
+    dirs = AppDirs(test_appname, test_appauthor)
     for prop in props:
         print("%s: %s" % (prop, getattr(dirs, prop)))
 
     print("\n-- app dirs (without optional 'appauthor')")
-    dirs = AppDirs(appname)
+    dirs = AppDirs(test_appname)
     for prop in props:
         print("%s: %s" % (prop, getattr(dirs, prop)))
 
     print("\n-- app dirs (with disabled 'appauthor')")
-    dirs = AppDirs(appname, appauthor=False)
+    dirs = AppDirs(test_appname, appauthor=False)
     for prop in props:
         print("%s: %s" % (prop, getattr(dirs, prop)))
