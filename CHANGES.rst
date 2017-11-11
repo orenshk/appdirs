@@ -4,7 +4,7 @@ appdirs Changelog
 appdirs 1.4.4
 -------------
 - [PR #92] Don't import appdirs from setup.py which
-fixes #91 - Don't get version from appdirs.__version__ 
+fixes #91 - Don't get version from appdirs.__version__
 
 Project officially classified as Stable which is important
 for inclusion in other distros such as ActivePython.
@@ -30,7 +30,7 @@ appdirs 1.4.0
 - [PR #42] AppAuthor is now optional on Windows
 - [issue 41] Support Jython on Windows, Mac, and Unix-like platforms. Windows
   support requires `JNA <https://github.com/twall/jna>`_.
-- [PR #44] Fix incorrect behaviour of the site_config_dir method
+- [PR #44] Fix incorrect behaviour of the site_config_dirs method
 
 appdirs 1.3.0
 -------------
@@ -38,7 +38,7 @@ appdirs 1.3.0
   everybody
 - [Unix] Removes gratuitous case mangling of the case, since \*nix-es are
   usually case sensitive, so mangling is not wise
-- [Unix] Fixes the utterly wrong behaviour in ``site_data_dir``, return result
+- [Unix] Fixes the utterly wrong behaviour in ``site_data_dirs``, return result
   based on XDG_DATA_DIRS and make room for respecting the standard which
   specifies XDG_DATA_DIRS is a multiple-value variable
 - [Issue 6] Add ``*_config_dir`` which are distinct on nix-es, according to
@@ -57,7 +57,7 @@ appdirs 1.1.0
 - [issue 4] Add ``AppDirs.user_log_dir``.
 - [Unix, issue 2, issue 7] appdirs now conforms to `XDG base directory spec
   <http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html>`_.
-- [Mac, issue 5] Fix ``site_data_dir()`` on Mac.
+- [Mac, issue 5] Fix ``site_data_dirs()`` on Mac.
 - [Mac] Drop use of 'Carbon' module in favour of hardcoded paths; supports
   Python3 now.
 - [Windows] Append "Cache" to ``user_cache_dir`` on Windows by default. Use

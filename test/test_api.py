@@ -21,7 +21,7 @@ class Test_AppDir(unittest.TestCase):
         self.assertIsInstance(
             appdirs.user_data_dir('MyApp', 'MyCompany'), STRING_TYPE)
         self.assertIsInstance(
-            appdirs.site_data_dir('MyApp', 'MyCompany'), STRING_TYPE)
+            appdirs.site_data_dirs('MyApp', 'MyCompany'), STRING_TYPE)
         self.assertIsInstance(
             appdirs.user_cache_dir('MyApp', 'MyCompany'), STRING_TYPE)
         self.assertIsInstance(

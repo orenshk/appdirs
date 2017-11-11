@@ -34,8 +34,8 @@ help you choose an appropriate:
 - user data dir (``user_data_dir``)
 - user config dir (``user_config_dir``)
 - user cache dir (``user_cache_dir``)
-- site data dir (``site_data_dir``)
-- site config dir (``site_config_dir``)
+- site data dir (``site_data_dirs``)
+- site config dir (``site_config_dirs``)
 - user log dir (``user_log_dir``)
 
 and also:
@@ -55,7 +55,7 @@ On Mac OS X::
     >>> appauthor = "Acme"
     >>> user_data_dir(appname, appauthor)
     '/Users/trentm/Library/Application Support/SuperApp'
-    >>> site_data_dir(appname, appauthor)
+    >>> site_data_dirs(appname, appauthor)
     '/Library/Application Support/SuperApp'
     >>> user_cache_dir(appname, appauthor)
     '/Users/trentm/Library/Caches/SuperApp'
@@ -83,9 +83,9 @@ On Linux::
     >>> appauthor = "Acme"
     >>> user_data_dir(appname, appauthor)
     '/home/trentm/.local/share/SuperApp
-    >>> site_data_dir(appname, appauthor)
+    >>> site_data_dirs(appname, appauthor)
     '/usr/local/share/SuperApp'
-    >>> site_data_dir(appname, appauthor, multipath=True)
+    >>> site_data_dirs(appname, appauthor, multipath=True)
     '/usr/local/share/SuperApp:/usr/share/SuperApp'
     >>> user_cache_dir(appname, appauthor)
     '/home/trentm/.cache/SuperApp'
@@ -93,10 +93,10 @@ On Linux::
     '/home/trentm/.cache/SuperApp/log'
     >>> user_config_dir(appname)
     '/home/trentm/.config/SuperApp'
-    >>> site_config_dir(appname)
+    >>> site_config_dirs(appname)
     '/etc/xdg/SuperApp'
     >>> os.environ['XDG_CONFIG_DIRS'] = '/etc:/usr/local/etc'
-    >>> site_config_dir(appname, multipath=True)
+    >>> site_config_dirs(appname, multipath=True)
     '/etc/SuperApp:/usr/local/etc/SuperApp'
 
 
@@ -109,7 +109,7 @@ On Linux::
     >>> dirs = AppDirs("SuperApp", "Acme")
     >>> dirs.user_data_dir
     '/Users/trentm/Library/Application Support/SuperApp'
-    >>> dirs.site_data_dir
+    >>> dirs.site_data_dirs
     '/Library/Application Support/SuperApp'
     >>> dirs.user_cache_dir
     '/Users/trentm/Library/Caches/SuperApp'
@@ -117,7 +117,7 @@ On Linux::
     '/Users/trentm/Library/Logs/SuperApp'
 
 
-    
+
 Per-version isolation
 =====================
 
@@ -129,7 +129,7 @@ dirs::
     >>> dirs = AppDirs("SuperApp", "Acme", version="1.0")
     >>> dirs.user_data_dir
     '/Users/trentm/Library/Application Support/SuperApp/1.0'
-    >>> dirs.site_data_dir
+    >>> dirs.site_data_dirs
     '/Library/Application Support/SuperApp/1.0'
     >>> dirs.user_cache_dir
     '/Users/trentm/Library/Caches/SuperApp/1.0'
