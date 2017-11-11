@@ -5,7 +5,8 @@
 
 """Utilities for determining application-specific dirs.
 
-See <http://github.com/ActiveState/appdirs> for details and usage.
+Inspired by
+<http://github.com/ActiveState/appdirs>
 """
 # Dev Notes:
 # - MSDN on where to store app data files:
@@ -13,16 +14,11 @@ See <http://github.com/ActiveState/appdirs> for details and usage.
 # - Mac OS X: http://developer.apple.com/documentation/MacOSX/Conceptual/BPFileSystem/index.html
 # - XDG spec for Un*x: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 
-__version__ = "1.4.4"
+__version__ = "0.1.0"
 __version_info__ = tuple(int(segment) for segment in __version__.split("."))
 
 import sys
 import os
-
-PY3 = sys.version_info[0] == 3
-
-if PY3:
-    unicode = str
 
 system = {"windows": False, 'macosx': False, 'linux': False}
 
@@ -392,39 +388,3 @@ def _get_win_folder(site, roaming, app_author):
 
     return os.path.join(buf.value, app_author)
 
-
-# ---- self test code
-
-if __name__ == "__main__":
-    test_appname = "MyApp"
-    test_appauthor = "MyCompany"
-
-    props = ("user_data_dir",
-             "user_config_dir",
-             "user_cache_dir",
-             "user_state_dir",
-             "user_log_dir",
-             "site_data_dir",
-             "site_config_dir")
-
-    print("-- app dirs %s --" % __version__)
-
-    print("-- app dirs (with optional 'version')")
-    dirs = AppDirs(test_appname, test_appauthor, version="1.0")
-    for prop in props:
-        print("%s: %s" % (prop, getattr(dirs, prop)))
-
-    print("\n-- app dirs (without optional 'version')")
-    dirs = AppDirs(test_appname, test_appauthor)
-    for prop in props:
-        print("%s: %s" % (prop, getattr(dirs, prop)))
-
-    print("\n-- app dirs (without optional 'appauthor')")
-    dirs = AppDirs(test_appname)
-    for prop in props:
-        print("%s: %s" % (prop, getattr(dirs, prop)))
-
-    print("\n-- app dirs (with disabled 'appauthor')")
-    dirs = AppDirs(test_appname, appauthor=False)
-    for prop in props:
-        print("%s: %s" % (prop, getattr(dirs, prop)))
