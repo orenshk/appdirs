@@ -3,7 +3,7 @@
 """
 This module provides an API for determining application specific directories for data, config, logs, etc.
 
-Module contents:
+public Module members:
     user_data_dir()
     user_config_dir()
     user_cache_dir()
@@ -20,9 +20,11 @@ This code is inspired by and builds on top of code from <http://github.com/Activ
 #   http://support.microsoft.com/default.aspx?scid=kb;en-us;310294#XSLTH3194121123120121120120
 # - Mac OS X: http://developer.apple.com/documentation/MacOSX/Conceptual/BPFileSystem/index.html
 # - XDG spec for Un*x: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
 import sys
 import os
 
+# only calculate this once, at import.
 WINDOWS = MACOSX = LINUX = False
 if sys.platform == 'win32':
     WINDOWS = True
@@ -264,7 +266,7 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
         str version: App version, appended to app_name
         bool roaming: Whether or not the Windows user is roaming.
         bool use_virtualenv: If True and a virtualenv is activated, use the virtualenv path instead of the OS
-            convention.
+            convention. Note: This is ignored for site directories, for obvious reasons.
         bool create: If True, create the directory if it doesn't exist. In the case of lists of directories, all folders
             are created.
 
@@ -281,15 +283,17 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
             paths = [os.path.normpath(_get_win_folder(site=False, roaming=roaming, app_author=app_author))]
         elif folder_type == 'user_cache':
             # we'll follow the MSDN recommendation on local data, but since they're mum on caches,
-            # we'll put them in LOCAL_APPDATA/author_name/app_name/Caches.
+            # we'll put them in LOCAL_APPDATA/author_name/Caches.
             path = os.path.normpath(_get_win_folder(site=False, roaming=False, app_author=app_author))
             paths = [os.path.join(path, 'Caches')]
         elif folder_type == 'user_logs':
             # Similar issue as with user caches. MSDN is no help.
             path = os.path.normpath(_get_win_folder(site=False, roaming=False, app_author=app_author))
             paths = [os.path.join(path, 'Logs')]
-        else:  # folder_type in ['site_data', 'site_config']:
+        elif folder_type in ['site_data', 'site_config']:
             paths = [os.path.normpath(_get_win_folder(site=True, roaming=roaming, app_author=app_author))]
+        else:
+            raise RuntimeError('Unknown folder type: {}'.format(folder_type))
 
     elif MACOSX:
         if folder_type in ['user_data', 'user_config', 'user_state']:
@@ -298,8 +302,10 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
             paths = [os.path.expanduser('~/Library/Caches')]
         elif folder_type == 'user_log':
             paths = [os.path.expanduser('~/Library/Logs')]
-        else:  # folder_type in ['site_data', 'site_config']:
+        elif folder_type in ['site_data', 'site_config']:
             paths = [os.path.expanduser('/Library/Application Support')]
+        else:
+            raise RuntimeError('Unknown folder type: {}'.format(folder_type))
 
     elif LINUX:
         if folder_type == 'user_data':
@@ -313,9 +319,12 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
         elif folder_type == 'site_data':
             path = os.getenv('XDG_DATA_DIRS', os.pathsep.join(['/usr/local/share', '/usr/share']))
             paths = [os.path.expanduser(x.rstrip(os.sep)) for x in path.split(os.pathsep)]
-        else:  # site_config
+        elif folder_type == 'site_config':
             path = os.getenv('XDG_CONFIG_DIRS', '/etc/xdg')
             paths = [os.path.expanduser(x.rstrip(os.sep)) for x in path.split(os.pathsep)]
+        else:
+            raise RuntimeError('Unknown folder type: {}'.format(folder_type))
+
     else:
         raise RuntimeError('Unsupported operating system: {}'.format(sys.platform))
 
@@ -323,7 +332,7 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
     for path in paths:
         final_path = os.path.join(path, app_name)
         if version is not None:
-            final_path = os.path.join(final_path, version)
+            final_path = '{}_{}'.format(final_path, version)
 
         if create and not os.path.exists(final_path):
             os.makedirs(final_path)
@@ -337,7 +346,7 @@ def _in_virtualenv_folder():
     """
     Determine if we're in a virtual env.
 
-    If sys.real_prefix exists, we're are in a virtualenv, and sys.prefix is the virtualenv path, while
+    If sys.real_prefix exists, we are in a virtualenv, and sys.prefix is the virtualenv path, while
     sys.real_prefix is the 'system' python.
     if sys.real_prefix does not exist, it could be because we're in python 3 and the user is using
     the built in venv module instead of virtualenv. In this case a sys.base_prefix attribute always exists, and is
