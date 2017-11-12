@@ -35,7 +35,6 @@ else:
 
 
 def user_data_dir(app_name, app_author=None, version=None, roaming=False, use_virtualenv=True, create=True):
-    # type: (str, str, str, bool, bool, bool) -> str
     """
     Return the full path to the user data dir for this application, using a virtualenv location as a base, if it is
     exists, and falling back to the host OS's convention if it doesn't.
@@ -249,8 +248,6 @@ def site_config_dirs(app_name=None, app_author=None, version=None, use_virtualen
 
 
 def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtualenv, create):
-    # type: (str, str, str, str, bool, bool, bool) -> list
-
     """
     Get the directory corresponding to the appropriate folder type and operating system.
     The folder is returned, with the app_name, and in the case of windows app_author appended to it.
@@ -284,7 +281,7 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
             paths = [os.path.normpath(_get_win_folder(site=False, roaming=roaming, app_author=app_author))]
         elif folder_type == 'user_cache':
             # we'll follow the MSDN recommendation on local data, but since they're mum on caches,
-            # we'll put them in LOCAL_APPDATA/author_name/Caches.
+            # we'll put them in LOCAL_APPDATA/author_name/app_name/Caches.
             path = os.path.normpath(_get_win_folder(site=False, roaming=False, app_author=app_author))
             paths = [os.path.join(path, 'Caches')]
         elif folder_type == 'user_logs':
@@ -378,6 +375,7 @@ def _get_win_folder(site, roaming, app_author):
 
     # Downgrade to short path name if have highbit chars. See
     # <http://bugs.activestate.com/show_bug.cgi?id=85099>.
+    # Oren: This bug is not publicly available!
     has_high_char = False
     for c in buf:
         if ord(c) > 255:
