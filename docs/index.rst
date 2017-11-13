@@ -1,13 +1,14 @@
 ..  -*- coding: utf-8 -*-
 
-.. _contents:
+.. _virtualenv: https://virtualenv.pypa.io/en/stable/
 
 Overview
 ========
 
 D-Wave appdirs
 -----------------
-An API for getting platform independent paths to user data and configuration folders.
+An API for getting platform independent paths to user data and configuration folders, with support for
+virtualenv_
 
 License
 -------
