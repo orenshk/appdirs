@@ -316,6 +316,8 @@ def _get_folder(folder_type, app_name, app_author, version, roaming, use_virtual
             paths = [os.getenv('XDG_STATE_HOME', os.path.expanduser("~/.local/state"))]
         elif folder_type == 'user_cache':
             paths = [os.getenv('XDG_CACHE_HOME', os.path.expanduser('~/.cache'))]
+        elif folder_type == 'user_log':
+            paths = [os.path.expanduser('~/.log')]
         elif folder_type == 'site_data':
             path = os.getenv('XDG_DATA_DIRS', os.pathsep.join(['/usr/local/share', '/usr/share']))
             paths = [os.path.expanduser(x.rstrip(os.sep)) for x in path.split(os.pathsep)]
