@@ -125,10 +125,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_data_no_version_no_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_data'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_data_dir(self.app_name, version=None, use_virtualenv=False, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_data_no_version_venv_no_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_data_venv'], self.app_name)
@@ -137,10 +137,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_data_no_version_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_data_venv'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_data_dir(self.app_name, version=None, use_virtualenv=True, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_data_version_no_venv_no_create(self):
         version = "1.0"
@@ -152,11 +152,11 @@ class TestDwaveAppDirs(unittest.TestCase):
         version = "1.0"
         expected = os.path.join(self.base_paths[self.platform]['user_data'], '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         result = dirs.user_data_dir(self.app_name, version=version, use_virtualenv=False, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_data_version_venv_no_create(self):
         version = '1.0'
@@ -170,12 +170,12 @@ class TestDwaveAppDirs(unittest.TestCase):
         expected = os.path.join(self.base_paths[self.platform]['user_data_venv'],
                                 '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertFalse(os.path.exists(expected))
         result = dirs.user_data_dir(self.app_name, version=version, use_virtualenv=True, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     #####################################################
     # user_cache_dir.
@@ -187,10 +187,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_cache_no_version_no_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_cache'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_cache_dir(self.app_name, version=None, use_virtualenv=False, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_cache_no_version_venv_no_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_cache_venv'], self.app_name)
@@ -199,10 +199,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_cache_no_version_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_cache_venv'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_cache_dir(self.app_name, version=None, use_virtualenv=True, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_cache_version_no_venv_no_create(self):
         version = "1.0"
@@ -214,11 +214,11 @@ class TestDwaveAppDirs(unittest.TestCase):
         version = "1.0"
         expected = os.path.join(self.base_paths[self.platform]['user_cache'], '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         result = dirs.user_cache_dir(self.app_name, version=version, use_virtualenv=False, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_cache_version_venv_no_create(self):
         version = '1.0'
@@ -232,12 +232,12 @@ class TestDwaveAppDirs(unittest.TestCase):
         expected = os.path.join(self.base_paths[self.platform]['user_cache_venv'],
                                 '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertFalse(os.path.exists(expected))
         result = dirs.user_cache_dir(self.app_name, version=version, use_virtualenv=True, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     #####################################################
     # user_config_dir
@@ -250,10 +250,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_config_no_version_no_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_config'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_config_dir(self.app_name, version=None, use_virtualenv=False, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_config_no_version_venv_no_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_config_venv'], self.app_name)
@@ -262,10 +262,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_config_no_version_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_config_venv'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_config_dir(self.app_name, version=None, use_virtualenv=True, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_config_version_no_venv_no_create(self):
         version = "1.0"
@@ -277,11 +277,11 @@ class TestDwaveAppDirs(unittest.TestCase):
         version = "1.0"
         expected = os.path.join(self.base_paths[self.platform]['user_config'], '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         result = dirs.user_config_dir(self.app_name, version=version, use_virtualenv=False, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_config_version_venv_no_create(self):
         version = '1.0'
@@ -295,12 +295,12 @@ class TestDwaveAppDirs(unittest.TestCase):
         expected = os.path.join(self.base_paths[self.platform]['user_config_venv'],
                                 '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertFalse(os.path.exists(expected))
         result = dirs.user_config_dir(self.app_name, version=version, use_virtualenv=True, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     #####################################################
     # user_state_dir
@@ -312,10 +312,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_state_no_version_no_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_state'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_state_dir(self.app_name, version=None, use_virtualenv=False, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_state_no_version_venv_no_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_state_venv'], self.app_name)
@@ -324,10 +324,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_state_no_version_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_state_venv'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_state_dir(self.app_name, version=None, use_virtualenv=True, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_state_version_no_venv_no_create(self):
         version = "1.0"
@@ -339,11 +339,11 @@ class TestDwaveAppDirs(unittest.TestCase):
         version = "1.0"
         expected = os.path.join(self.base_paths[self.platform]['user_state'], '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         result = dirs.user_state_dir(self.app_name, version=version, use_virtualenv=False, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_state_version_venv_no_create(self):
         version = '1.0'
@@ -357,12 +357,12 @@ class TestDwaveAppDirs(unittest.TestCase):
         expected = os.path.join(self.base_paths[self.platform]['user_state_venv'],
                                 '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertFalse(os.path.exists(expected))
         result = dirs.user_state_dir(self.app_name, version=version, use_virtualenv=True, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     #####################################################
     # user_log_dir
@@ -374,10 +374,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_log_no_version_no_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_log'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_log_dir(self.app_name, version=None, use_virtualenv=False, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_log_no_version_venv_no_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_log_venv'], self.app_name)
@@ -386,10 +386,10 @@ class TestDwaveAppDirs(unittest.TestCase):
     def test_user_log_no_version_venv_create(self):
         expected = os.path.join(self.base_paths[self.platform]['user_log_venv'], self.app_name)
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertEqual(expected, dirs.user_log_dir(self.app_name, version=None, use_virtualenv=True, create=True))
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_log_version_no_venv_no_create(self):
         version = "1.0"
@@ -401,11 +401,11 @@ class TestDwaveAppDirs(unittest.TestCase):
         version = "1.0"
         expected = os.path.join(self.base_paths[self.platform]['user_log'], '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         result = dirs.user_log_dir(self.app_name, version=version, use_virtualenv=False, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     def test_user_log_version_venv_no_create(self):
         version = '1.0'
@@ -419,12 +419,12 @@ class TestDwaveAppDirs(unittest.TestCase):
         expected = os.path.join(self.base_paths[self.platform]['user_log_venv'],
                                 '{}_{}'.format(self.app_name, version))
         if os.path.exists(expected):
-            os.rmdir(expected)
+            shutil.rmtree(expected)
         self.assertFalse(os.path.exists(expected))
         result = dirs.user_log_dir(self.app_name, version=version, use_virtualenv=True, create=True)
         self.assertEqual(expected, result)
         self.assertTrue(os.path.exists(expected))
-        os.rmdir(expected)
+        shutil.rmtree(expected)
 
     #####################################################
     # site_data_dirs. Not testing create=True since we don't know if we have permissions.
@@ -520,8 +520,8 @@ class TestDwaveAppDirsLinuxXDG(TestDwaveAppDirs):
     def _expected_base_paths(self):
         """
         Note: This class will always run regardless of OS, but unless self.platform is linux the values below are
-        ignored and the test will be meaningless. You can either run it or linux (e.g. using the Dockerfile),
-        or on mac by hard coding self.platfom to 'linux' e.g. by overriding __init__.
+        ignored and the test will be meaningless. You can either run it on linux (e.g. using the Dockerfile at the root
+        of this project),or on mac by hard coding self.platform to 'linux' e.g. by overriding __init__.
         """
         base_paths = TestDwaveAppDirs._expected_base_paths(self)
 

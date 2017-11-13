@@ -3,16 +3,19 @@
 """
 This module provides an API for determining application specific directories for data, config, logs, etc.
 
-public Module members:
-    user_data_dir()
-    user_config_dir()
-    user_cache_dir()
-    user_state_dir()
-    user_log_dir()
-    site_data_dirs()
-    site_config_dirs()
+public module members:
 
-This code is inspired by and builds on top of code from <http://github.com/ActiveState/appdirs>
+.. autosummary::
+
+    user_data_dir
+    user_config_dir
+    user_cache_dir
+    user_state_dir
+    user_log_dir
+    site_data_dirs
+    site_config_dirs
+
+This code is inspired by and builds on top of code from http://github.com/ActiveState/appdirs
 
 """
 # Dev Notes:
@@ -31,7 +34,7 @@ if sys.platform == 'win32':
 elif sys.platform == 'darwin':
     MACOSX = True
 else:
-    # this is a broad generalization. We may be able to get away with sys.platform.statswith('linux') and error
+    # this is a broad generalization. We may be able to get away with sys.platform.startswith('linux') and error
     # out on everything else. But this requires some testing.
     LINUX = True
 
@@ -41,18 +44,19 @@ def user_data_dir(app_name, app_author=None, version=None, roaming=False, use_vi
     Return the full path to the user data dir for this application, using a virtualenv location as a base, if it is
     exists, and falling back to the host OS's convention if it doesn't.
 
-    If using a virtualenv, the path returned is /path/to/virtualenv/data/app_name
+    If using a virtualenv, the path returned is :bash:`/path/to/virtualenv/data/app_name`
 
     Typical user data directories are:
-        Mac OS X:               ~/Library/Application Support/<app_name>
-        Unix:                   ~/.local/share/<app_name>    # or $XDG_DATA_HOME/<app_name>, if defined.
-        Win XP (not roaming):   C:\Documents and Settings\<username>\Application Data\<app_author>\<app_name>
-        Win XP (roaming):       C:\Documents and Settings\<username>\Local Settings\Application Data\<app_author>\<app_name>
-        Win 7  (not roaming):   C:\Users\<username>\AppData\Local\<app_author>\<app_name>
-        Win 7  (roaming):       C:\Users\<username>\AppData\Roaming\<app_author>\<app_name>
 
-    For Unix, we follow the XDG spec and support $XDG_DATA_HOME.
-    That means, by default "~/.local/share/<AppName>".
+        * Mac OS X:               :bash:`~/Library/Application Support/<app_name>`
+        * Unix:                   :bash:`~/.local/share/<app_name>    # or $XDG_DATA_HOME/<app_name>, if defined.`
+        * Win XP (not roaming):   :bash:`C:\Documents and Settings\<username>\Application Data\<app_author>\<app_name>`
+        * Win XP (roaming):       :bash:`C:\Documents and Settings\<username>\Local Settings\Application Data\<app_author>\<app_name>`
+        * Win 7  (not roaming):   :bash:`C:\Users\<username>\AppData\Local\<app_author>\<app_name>`
+        * Win 7  (roaming):       :bash:`C:\Users\<username>\AppData\Roaming\<app_author>\<app_name>`
+
+    For Unix, we follow the XDG spec and support :bash:`$XDG_DATA_HOME`.
+    That means, by default :bash:`~/.local/share/<AppName>`.
 
 
     Args:
@@ -61,7 +65,7 @@ def user_data_dir(app_name, app_author=None, version=None, roaming=False, use_vi
         str version: If given, the application version identifier will be appended to the app_name.
         bool roaming: roaming appdata directory. That means that for users on a Windows
             network setup for roaming profiles, this user data will be synchronized on login. See
-            <http://technet.microsoft.com/en-us/library/cc766489(WS.10).aspx> for a discussion of issues.
+            http://technet.microsoft.com/en-us/library/cc766489(WS.10).aspx for a discussion of issues.
         bool use_virtualenv: If True and we're running inside of a virtualenv, return a path relative to that
             environment.
         bool create: If True, the folder is created if it does not exist before the path is returned.
@@ -77,15 +81,15 @@ def user_config_dir(app_name, app_author=None, version=None, roaming=False, use_
     Return the full path to the user data dir for this application, using a virtualenv location as a base, if it is
     exists, and falling back to the host OS's convention if it doesn't.
 
-    If using a virtualenv, the path returned is /path/to/virtualenv/config/app_name
+    If using a virtualenv, the path returned is :bash:`/path/to/virtualenv/config/app_name`
 
     Typical user config directories are:
-        Mac OS X:               same as user_data_dir
-        Unix:                   ~/.config/<AppName>     # or in $XDG_CONFIG_HOME, if defined
-        Win *:                  same as user_data_dir
+        * Mac OS X:               same as user_data_dir
+        * Unix:                   :bash:`~/.config/<AppName> # or in $XDG_CONFIG_HOME, if defined`
+        * Win \*:                  same as user_data_dir
 
     For Unix, we follow the XDG spec and support $XDG_CONFIG_HOME.
-    That means, by default "~/.config/<AppName>".
+    That means, by default :bash:`~/.config/<AppName>`.
 
     Args:
         str app_name: Name of the application. Will be appended to the base user config path.
@@ -93,7 +97,7 @@ def user_config_dir(app_name, app_author=None, version=None, roaming=False, use_
         str version: If given, the application version identifier will be appended to the app_name.
         bool roaming: roaming appdata directory. That means that for users on a Windows
             network setup for roaming profiles, this user data will be synchronized on login. See
-            <http://technet.microsoft.com/en-us/library/cc766489(WS.10).aspx> for a discussion of issues.
+            http://technet.microsoft.com/en-us/library/cc766489(WS.10).aspx for a discussion of issues.
         bool use_virtualenv: If True and we're running inside of a virtualenv, return a path relative to that
             environment.
         bool create: If True, the folder is created if it does not exist before the path is returned.
@@ -109,13 +113,13 @@ def user_cache_dir(app_name=None, app_author=None, version=None, use_virtualenv=
     Return the full path to the user data dir for this application, using a virtualenv location as a base, if it is
     exists, and falling back to the host OS's convention if it doesn't.
 
-    If using a virtualenv, the path returned is /path/to/virtualenv/cache/app_name
+    If using a virtualenv, the path returned is :bash:`/path/to/virtualenv/cache/app_name`
 
     Typical user cache directories are:
-        Mac OS X:   ~/Library/Caches/<AppName>
-        Unix:       ~/.cache/<AppName> (XDG default)
-        Win XP:     C:\Documents and Settings\<username>\Local Settings\Application Data\<AppAuthor>\<AppName>\Cache
-        Vista:      C:\Users\<username>\AppData\Local\<AppAuthor>\<AppName>\Cache
+        * Mac OS X:   :bash:`~/Library/Caches/<AppName>`
+        * Unix:       :bash:`~/.cache/<AppName> (XDG default)`
+        * Win XP:     :bash:`C:\Documents and Settings\<username>\Local Settings\Application Data\<AppAuthor>\<AppName>\Cache`
+        * Vista:      :bash:`C:\Users\<username>\AppData\Local\<AppAuthor>\<AppName>\Cache`
 
     Args:
         str app_name: Name of the application. Will be appended to the base user config path.
@@ -137,17 +141,15 @@ def user_state_dir(app_name=None, app_author=None, version=None, roaming=False, 
     Return the full path to the user data dir for this application, using a virtualenv location as a base, if it is
     exists, and falling back to the host OS's convention if it doesn't.
 
-    If using a virtualenv, the path returned is /path/to/virtualenv/state/app_name
+    If using a virtualenv, the path returned is :bash:`/path/to/virtualenv/state/app_name`
 
     Typical user state directories are:
-        Mac OS X:  same as user_data_dir
-        Unix:      ~/.local/state/<AppName>   # or in $XDG_STATE_HOME, if defined
-        Win *:     same as user_data_dir
+        * Mac OS X:  same as user_data_dir
+        * Unix:      :bash:`~/.local/state/<AppName>   # or in $XDG_STATE_HOME, if defined`
+        * Win \*:     same as user_data_dir
 
-    For Unix, we follow this Debian proposal <https://wiki.debian.org/XDGBaseDirectorySpecification#state>
-    to extend the XDG spec and support $XDG_STATE_HOME.
-
-    That means, by default "~/.local/state/<AppName>".
+    For Unix, we follow this Debian proposal https://wiki.debian.org/XDGBaseDirectorySpecification#state
+    to extend the XDG spec and support $XDG_STATE_HOME. That means, by default :bash:`~/.local/state/<AppName>`.
 
     Args:
         str app_name: Name of the application. Will be appended to the base user config path.
@@ -155,7 +157,7 @@ def user_state_dir(app_name=None, app_author=None, version=None, roaming=False, 
         str version: If given, the application version identifier will be appended to the app_name.
         bool roaming: roaming appdata directory. That means that for users on a Windows
             network setup for roaming profiles, this user data will be synchronized on login. See
-            <http://technet.microsoft.com/en-us/library/cc766489(WS.10).aspx> for a discussion of issues.
+            http://technet.microsoft.com/en-us/library/cc766489(WS.10).aspx for a discussion of issues.
         bool use_virtualenv: If True and we're running inside of a virtualenv, return a path relative to that
             environment.
         bool create: If True, the folder is created if it does not exist before the path is returned.
@@ -171,13 +173,13 @@ def user_log_dir(app_name=None, app_author=None, version=None, use_virtualenv=Tr
     Return the full path to the user log dir for this application, using a virtualenv location as a base, if it is
     exists, and falling back to the host OS's convention if it doesn't.
 
-    If using a virtualenv, the path returned is /path/to/virtualenv/log/app_name
+    If using a virtualenv, the path returned is :bash:`:bash:`/path/to/virtualenv/log/app_name``
 
     Typical user log directories are:
-        Mac OS X:   ~/Library/Logs/<AppName>
-        Unix:       ~/.cache/<AppName>/log  # or under $XDG_CACHE_HOME if defined
-        Win XP:     C:\Documents and Settings\<username>\Local Settings\Application Data\<AppAuthor>\<AppName>\Logs
-        Vista:      C:\Users\<username>\AppData\Local\<AppAuthor>\<AppName>\Logs
+        * Mac OS X:   :bash:`~/Library/Logs/<AppName>`
+        * Unix:       :bash:`~/.cache/<AppName>/log  # or under $XDG_CACHE_HOME if defined`
+        * Win XP:     :bash:`C:\Documents and Settings\<username>\Local Settings\Application Data\<AppAuthor>\<AppName>\Logs`
+        * Vista:      :bash:`C:\Users\<username>\AppData\Local\<AppAuthor>\<AppName>\Logs`
 
     Args:
         str app_name: Name of the application. Will be appended to the base user config path.
@@ -198,14 +200,16 @@ def site_data_dirs(app_name=None, app_author=None, version=None, use_virtualenv=
     Return the full path to the OS wide data dir for this application.
 
     Typical site data directories are:
-        Mac OS X:   /Library/Application Support/<AppName>
-        Unix:       /usr/local/share/<AppName> or /usr/share/<AppName>
-        Win XP:     C:\Documents and Settings\All Users\Application Data\<AppAuthor>\<AppName>
-        Vista:      (Fail! "C:\ProgramData" is a hidden *system* directory on Vista.)
-        Win 7:      C:\ProgramData\<AppAuthor>\<AppName>   # Hidden, but writeable on Win 7.
+        * Mac OS X:   :bash:`/Library/Application Support/<AppName>`
+        * Unix:       :bash:`/usr/local/share/<AppName> or /usr/share/<AppName>`
+        * Win XP:     :bash:`C:\Documents and Settings\All Users\Application Data\<AppAuthor>\<AppName>`
+        * Vista:      :bash:`(Fail! "C:\ProgramData" is a hidden *system* directory on Vista.)`
+        * Win 7:      :bash:`C:\ProgramData\<AppAuthor>\<AppName>   # Hidden, but writeable on Win 7.`
 
-    For Unix, this is using the $XDG_DATA_DIRS[0] default.
-    ..warning:: Do not use this on Windows Vista. See the Vista-Fail note above for why.
+    For Unix, this is using the :bash:`$XDG_DATA_DIRS` default.
+
+    .. WARNING::
+        Do not use this on Windows Vista. See the Vista-Fail note above for why.
 
     Args:
         str app_name: Name of the application. Will be appended to the base user config path.
@@ -226,14 +230,16 @@ def site_config_dirs(app_name=None, app_author=None, version=None, use_virtualen
     Return the full path to the OS wide config dir for this application.
 
     Typical site data directories are:
-        Mac OS X:   /Library/Application Support/<AppName>
-        Unix:       /usr/local/share/<AppName> or /usr/share/<AppName>
-        Win XP:     C:\Documents and Settings\All Users\Application Data\<AppAuthor>\<AppName>
-        Vista:      (Fail! "C:\ProgramData" is a hidden *system* directory on Vista.)
-        Win 7:      C:\ProgramData\<AppAuthor>\<AppName>   # Hidden, but writeable on Win 7.
+        * Mac OS X:   :bash:`/Library/Application Support/<AppName>`
+        * Unix:       :bash:`/usr/local/share/<AppName> or /usr/share/<AppName>`
+        * Win XP:     :bash:`C:\Documents and Settings\All Users\Application Data\<AppAuthor>\<AppName>`
+        * Vista:      :bash:`(Fail! "C:\ProgramData" is a hidden *system* directory on Vista.)`
+        * Win 7:      :bash:`C:\ProgramData\<AppAuthor>\<AppName>   # Hidden, but writeable on Win 7.`
 
-    For Unix, this is using the $XDG_DATA_DIRS[0] default.
-    ..warning:: Do not use this on Windows Vista. See the Vista-Fail note above for why.
+    For Unix, this is using the :bash:`$XDG_DATA_DIRS` default.
+
+    .. WARNING::
+        Do not use this on Windows Vista. See the Vista-Fail note above for why.
 
     Args:
         str app_name: Name of the application. Will be appended to the base user config path.
@@ -385,7 +391,7 @@ def _get_win_folder(site, roaming, app_author):
     ctypes.windll.shell32.SHGetFolderPathW(None, csidl_const, None, 0, buf)
 
     # Downgrade to short path name if have highbit chars. See
-    # <http://bugs.activestate.com/show_bug.cgi?id=85099>.
+    # http://bugs.activestate.com/show_bug.cgi?id=85099.
     # Oren: This bug is not publicly available!
     has_high_char = False
     for c in buf:
